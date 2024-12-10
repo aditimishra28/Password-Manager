@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>QR Code Generator</title>
   <script src="qrcode.min.js"></script>
+  <link rel="stylesheet" href="popup.css">
   <script src="popup.js" defer></script>
 </head>
+
 <body>
-  <h2>QR Code</h2>
-  <div id="qrcode"></div>
-  <p id="message"></p>
+  <div class="wrapper">
+    <h3>Scan the QR code to login</h3>
+    <div id="qrcode"></div>
+    <p id="message"></p>
+  </div>
 </body>
+
 </html>

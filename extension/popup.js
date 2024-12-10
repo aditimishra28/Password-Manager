@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Generate the QR code with the message
             const QR = new QRCode(qrcodeContainer, {
               text: `${UNIQUE_ID},${websiteName}`,
-              width: 128,
-              height: 128,
+              width: 180,
+              height: 180,
             });
 
             pollForCredentials(BASE_URL, UNIQUE_ID);

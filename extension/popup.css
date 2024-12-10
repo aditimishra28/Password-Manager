@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.wrapper {
+    padding: 2rem;
+    background: #c1d3ff;
+}
+
+.wrapper>h3 {
+    text-align: center;
+}
+
+#qrcode {
+    mix-blend-mode: multiply;
+}
