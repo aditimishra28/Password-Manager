@@ -3,14 +3,22 @@
   "name": "Login Page QR Code Generator",
   "version": "1.1",
   "description": "Generates QR codes on login pages with website details.",
-  "permissions": ["activeTab"],
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "tabs"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "action": {

@@ -28,8 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
           .then((response) => response.text())
           .then((data) => {
-            console.log(data);
-
             // Generate the QR code with the message
             const QR = new QRCode(qrcodeContainer, {
               text: `${UNIQUE_ID},${websiteName}`,
@@ -38,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             pollForCredentials(BASE_URL, UNIQUE_ID);
-
           })
           .catch((error) => {
             console.log(error);
@@ -55,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function pollForCredentials(BASE_URL, UID) {
   function checkCredentials() {
     fetch(`${BASE_URL}/get_data`, {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ UID: UID })
     })
@@ -63,12 +60,14 @@ function pollForCredentials(BASE_URL, UID) {
       .then(data => {
         // Skip if we get error messages
         if (data === "UID NOT FOUND" || data === "CREDS NOT FOUND") {
+          document.querySelector("#message").innerHTML = data;
           return;
         }
 
         // If we got valid data, clear interval and handle response
         clearInterval(intervalId);
-        console.log(data);
+        document.querySelector("#message").innerHTML = data;
+        send_data_to_content(data)
         // const credentials = JSON.parse(data);
       })
       .catch(error => console.error('Error:', error));
@@ -77,4 +76,37 @@ function pollForCredentials(BASE_URL, UID) {
   // Run immediately and then every 5 seconds
   checkCredentials();
   const intervalId = setInterval(checkCredentials, 5000);
+}
+
+
+
+function send_data_to_content(data) {
+  // Assuming 'data' contains the credentials as a JSON string
+  const credentials = JSON.parse(data); // { username: 'user123', password: 'pass123' }
+
+  // Send message to the content script
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const currentTabId = tabs[0].id;
+
+    chrome.scripting.executeScript(
+      {
+        target: { tabId: currentTabId },
+        files: ["content.js"], // Inject the content script if not already done
+      },
+      () => {
+        chrome.tabs.sendMessage(
+          currentTabId,
+          { action: "fillCredentials", data: credentials },
+          (response) => {
+            if (response?.success) {
+              console.log("Credentials filled successfully!");
+            } else {
+              console.error("Failed to fill credentials.");
+            }
+          }
+        );
+      }
+    );
+  });
+
 }

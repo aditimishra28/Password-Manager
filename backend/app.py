@@ -55,7 +55,7 @@ def send_creds():
     return {200: "OK"}
 
 
-@app.route("/get_data", methods=["GET"])
+@app.route("/get_data", methods=["POST"])
 def get_data():
     global STATE_DICT
     data = request.get_data()
